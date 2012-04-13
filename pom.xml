@@ -38,6 +38,33 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+	
+		<dependency>
+			<groupId>com.tinkerpop</groupId>
+			<artifactId>frames</artifactId>
+			<version>0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.tinkerpop.gremlin</groupId>
+			<artifactId>gremlin-java</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.tinkerpop.blueprints</groupId>
+			<artifactId>blueprints-neo4j-graph</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-rest-graphdb</artifactId>
+			<version>1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
@@ -97,12 +124,22 @@
 	</dependencies>
 	<repositories>
 		<repository>
-			<id>JBOSS_NEXUS</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<id>neo4j</id>
+			<url>http://m2.neo4j.org/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>morphia</id>
 			<url>http://morphia.googlecode.com/svn/mavenrepo</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>JBOSS_NEXUS</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
