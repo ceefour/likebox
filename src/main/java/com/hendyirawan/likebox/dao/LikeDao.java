@@ -4,6 +4,8 @@ import org.neo4j.rest.graphdb.RestGraphDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.hendyirawan.likebox.app.ArticleV;
 import com.hendyirawan.likebox.app.PersonV;
 import com.hendyirawan.likebox.app.PlaceV;
@@ -54,6 +56,8 @@ public class LikeDao {
 			log.debug("Find vertex {} ID {}", personIdx.getIndexName(), id);
 			Vertex v = personIdx.get("_rowId", id).iterator().next();
 			person = frames.frame(v, PersonV.class);
+			log.debug("Found Person vertex #{} id={} slug={} name={}", new Object[] {
+					person.asVertex().getId(), person.getId(), person.getSlug(), person.getName() });
 		} catch (Exception e) {
 			log.info("Add Person vertex ID={} slug={} name={}", new Object[] {
 					id, slug, name });
@@ -62,6 +66,9 @@ public class LikeDao {
 			person.setSlug(slug);
 			person.setName(name);
 			person.setPhotoId(photoId);
+			log.info("Added Person vertex #{} ID={} slug={} name={}", new Object[] {
+					person.asVertex().getId(), id, slug, name });
+			personIdx.put("_rowId", id, person.asVertex());
 		}
 		return person;
 	}
@@ -73,6 +80,8 @@ public class LikeDao {
 			log.debug("Find vertex {} ID {}", articleIdx.getIndexName(), id);
 			Vertex v = articleIdx.get("_rowId", id).iterator().next();
 			article = frames.frame(v, ArticleV.class);
+			log.debug("Found Article vertex #{} id={} slug={} name={}", new Object[] {
+					article.asVertex().getId(), article.getId(), article.getSlug(), article.getName() });
 		} catch (Exception e) {
 			log.info("Add Article vertex ID={} slug={} name={}", new Object[] {
 					id, slug, name });
@@ -81,6 +90,8 @@ public class LikeDao {
 			article.setSlug(slug);
 			article.setName(name);
 			article.setPhotoId(photoId);
+			log.info("Added Article vertex #{} ID={} slug={} name={}", new Object[] {
+					article.asVertex().getId(), id, slug, name });
 			articleIdx.put("_rowId", id, article.asVertex());
 		}
 		return article;
@@ -93,6 +104,8 @@ public class LikeDao {
 			log.debug("Find vertex {} ID {}", placeIdx.getIndexName(), id);
 			Vertex v = placeIdx.get("_rowId", id).iterator().next();
 			place = frames.frame(v, PlaceV.class);
+			log.debug("Found Place vertex #{} id={} slug={} name={}", new Object[] {
+				place.asVertex().getId(), place.getId(), place.getSlug(), place.getName() });
 		} catch (Exception e) {
 			log.info("Add Place vertex ID={} slug={} name={}", new Object[] {
 					id, slug, name });
@@ -101,13 +114,35 @@ public class LikeDao {
 			place.setSlug(slug);
 			place.setName(name);
 			place.setPhotoId(photoId);
+			log.info("Added Place vertex #{} ID={} slug={} name={}", new Object[] {
+					place.asVertex().getId(), id, slug, name });
 			placeIdx.put("_rowId", id, place.asVertex());
 		}
 		return place;
 	}
 	
-	public void addLike(PersonV person, ArticleV article) {
-		person.addLikeArticle(article);
+	/**
+	 * Please use this method instead of directly on value objects, because they don't check for existing relation.
+	 * @param person
+	 * @param article
+	 */
+	public void addLike(PersonV person, final ArticleV article) {
+		if ( person.getLikeArticles().contains(article) ) {
+			log.debug("Person {} already likes Article {}", person.getId(), article.getId());
+		} else {
+			log.debug("Person {} now likes Article {}", person.getId(), article.getId());
+			person.addLikeArticle(article);
+		}
+	}
+
+	/**
+	 * Please use this method instead of directly on value objects, because they don't check for existing relation.
+	 * @param person
+	 * @param article
+	 */
+	public void removeLike(PersonV person, final ArticleV article) {
+		log.debug("Person {} unlikes Article {}", person.getId(), article.getId());
+		person.getLikeArticles().remove(article);
 	}
 
 	/**

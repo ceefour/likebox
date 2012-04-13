@@ -8,7 +8,7 @@ Attempts to store @LIKE@, @FOLLOW@, @HAPPEN@ (regular edge without properties) f
 4. @Person AROUND Place@ (probably also @CHECKIN@, with properties such as @created@, and @lat+long@)
 
 
-h3. Extras
+h2. Extras
 
 I also attempt to write 6 random generators for:
 
@@ -21,9 +21,15 @@ I also attempt to write 6 random generators for:
 6. @PersonWallPerson@ stories
 
 
-h3. TODO
+h2. TODO
 
 1. @created@ property in LIKE, FOLLOW, HAPPEN, AROUND edges
 1. Hyper-edges
 2. Create domain objects using Ecore / EMF. Note: resulting domain objects should "just work" with Frames, spring Data mapping,
    and technologies such as JAX-RS, Jackson.
+
+   
+h2. Known Issues
+
+@likeboxPerson@, @likeboxArticle@, @likeboxPlace@ vertex indexes must be created manually prior running the test case.
+See https://github.com/neo4j/community/issues/416 .
