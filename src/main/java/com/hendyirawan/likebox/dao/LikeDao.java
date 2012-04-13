@@ -64,6 +64,7 @@ public class LikeDao {
 			log.info("Add Person vertex ID={} slug={} name={}", new Object[] {
 					id, slug, name });
 			person = frames.createFramedVertex(PersonV.class);
+			person.asVertex().setProperty("kind", "Person");
 			person.setId(id);
 			person.setSlug(slug);
 			person.setName(name);
@@ -88,6 +89,7 @@ public class LikeDao {
 			log.info("Add Article vertex ID={} slug={} name={}", new Object[] {
 					id, slug, name });
 			article = frames.createFramedVertex(ArticleV.class);
+			article.asVertex().setProperty("kind", "Article");
 			article.setId(id);
 			article.setSlug(slug);
 			article.setName(name);
@@ -112,6 +114,7 @@ public class LikeDao {
 			log.info("Add Place vertex ID={} slug={} name={}", new Object[] {
 					id, slug, name });
 			place = frames.createFramedVertex(PlaceV.class);
+			place.asVertex().setProperty("kind", "Place");
 			place.setId(id);
 			place.setSlug(slug);
 			place.setName(name);
