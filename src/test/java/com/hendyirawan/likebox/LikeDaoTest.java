@@ -77,6 +77,17 @@ public class LikeDaoTest {
 		likeDao.removeLike(person, article);
 	}
 
+	@Test public void hendyLikesManyArticles() {
+		PersonV hendy = likeDao.getPerson("hendy", "hendy", "Hendy Irawan", "hendy_irawan");
+		ArticleV air = likeDao.getArticle("air_itu_sehat", "air-itu-sehat", "Air Itu Sehat Lho!", "air_itu_sehat");
+		ArticleV cinta = likeDao.getArticle("cinta", "cinta", "Cinta Sangat Indah", "cinta");
+		ArticleV sayang = likeDao.getArticle("sayang", "sayang", "Rasa Sayang membuat Manis Harimu", "sayang");
+		
+		likeDao.addLike(hendy, air);
+		likeDao.addLike(hendy, cinta);
+		likeDao.addLike(hendy, sayang);
+	}
+
 	@Test public void listPersonLikeArticles() {
 		PersonV person = likeDao.getPerson("hendy", "hendy", "Hendy Irawan", "hendy_irawan");
 	}
