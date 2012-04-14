@@ -1,20 +1,21 @@
 package com.hendyirawan.likebox.dao;
 
-import java.util.List;
-
+import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.cypher.javacompat.ExecutionResult;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.helpers.collection.IteratorUtil;
 import org.neo4j.rest.graphdb.RestGraphDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.hendyirawan.likebox.app.ArticleV;
 import com.hendyirawan.likebox.app.PersonV;
 import com.hendyirawan.likebox.app.PlaceV;
-import com.tinkerpop.blueprints.pgm.Edge;
 import com.tinkerpop.blueprints.pgm.Index;
 import com.tinkerpop.blueprints.pgm.Vertex;
 import com.tinkerpop.blueprints.pgm.impls.neo4j.Neo4jGraph;
 import com.tinkerpop.frames.FramesManager;
-import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 /**
  * DAO to manage Like relations.
@@ -147,15 +148,27 @@ public class LikeDao {
 	 */
 	public void removeLike(PersonV person, final ArticleV article) {
 		log.debug("Person {} unlikes Article {}", person.getId(), article.getId());
-		// If RestGraphDatabase supports Cypher, this would work and very fast:
+		
+		// Best performance using Cypher query:
 		// START liker=node:likeboxPerson(_rowId='hendy'), liked=node:likeboxArticle(_rowId='air_itu_sehat') MATCH liker -[rel:LIKE]-> liked RETURN rel
-		GremlinPipeline<Vertex, Edge> pipe = new GremlinPipeline<Vertex, Edge>(person.asVertex());
-		List<Edge> rels = (List<Edge>) pipe.outE("LIKE").inV().has("_rowId", article.getId()).back(2).toList();
-		for (Edge e : rels) {
+		ExecutionEngine exec = new ExecutionEngine(graphDb);
+		ExecutionResult result = exec.execute("START liker=node:likeboxPerson(_rowId='hendy'), liked=node:likeboxArticle(_rowId='air_itu_sehat') MATCH liker -[rel:LIKE]-> liked RETURN rel",
+				ImmutableBiMap.of("personId", (Object)person.getId(), "articleId", article.getId()));
+		for (Object obj : IteratorUtil.asIterable(result.columnAs("rel"))) {
+			Relationship rel = (Relationship) obj;
 			log.info("Remove edge #{} Person {} like Article {}", new Object[] {
-					e.getId(), person.getId(), article.getId() });
-			g.removeEdge(e);
+					rel.getId(), person.getId(), article.getId() });
+			rel.delete();
 		}
+	
+//		GremlinPipeline<Vertex, Edge> pipe = new GremlinPipeline<Vertex, Edge>(person.asVertex());
+//		List<Edge> rels = (List<Edge>) pipe.outE("LIKE").inV().has("_rowId", article.getId()).back(2).toList();
+//		for (Edge e : rels) {
+//			log.info("Remove edge #{} Person {} like Article {}", new Object[] {
+//					e.getId(), person.getId(), article.getId() });
+//			g.removeEdge(e);
+//		}
+
 		// not yet supported
 //		person.getLikeArticles().remove(article);
 	}
