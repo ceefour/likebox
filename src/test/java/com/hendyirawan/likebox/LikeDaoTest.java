@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.hendyirawan.likebox.app.ArticleV;
 import com.hendyirawan.likebox.app.PersonV;
+import com.hendyirawan.likebox.app.PlaceV;
 import com.hendyirawan.likebox.dao.LikeDao;
 
 /**
@@ -90,6 +91,39 @@ public class LikeDaoTest {
 
 	@Test public void listPersonLikeArticles() {
 		PersonV person = likeDao.getPerson("hendy", "hendy", "Hendy Irawan", "hendy_irawan");
+	}
+
+	@Test public void ensurePlaces() {
+		PlaceV bandung = likeDao.getPlace("bandung", "bandung", "Bandung", "bandung");
+		PlaceV kediri = likeDao.getPlace("kediri", "kediri", "Kediri", "kediri");
+	}
+
+	@Test public void peoplePlaces() {
+		PlaceV bandung = likeDao.getPlace("bandung", "bandung", "Bandung", "bandung");
+		PlaceV kediri = likeDao.getPlace("kediri", "kediri", "Kediri", "kediri");
+
+		PersonV hendy = likeDao.getPerson("hendy", "hendy", "Hendy Irawan", "hendy_irawan");
+		PersonV rudi = likeDao.getPerson("rudi", "rudi.wijaya", "Rudi Wijaya", "rudi_wijaya");
+		PersonV atang = likeDao.getPerson("atang", "atang.sutisna", "Atang Sutisna", "atang_sutisna");
+
+		likeDao.addAround(hendy, bandung);
+		likeDao.addAround(hendy, kediri);
+		likeDao.addAround(rudi, bandung);
+		likeDao.addAround(atang, bandung);
+	}
+
+	@Test public void articlePlaces() {
+		PlaceV bandung = likeDao.getPlace("bandung", "bandung", "Bandung", "bandung");
+		PlaceV kediri = likeDao.getPlace("kediri", "kediri", "Kediri", "kediri");
+
+		ArticleV air = likeDao.getArticle("air_itu_sehat", "air-itu-sehat", "Air Itu Sehat Lho!", "air_itu_sehat");
+		ArticleV cinta = likeDao.getArticle("cinta", "cinta", "Cinta Sangat Indah", "cinta");
+		ArticleV sayang = likeDao.getArticle("sayang", "sayang", "Rasa Sayang membuat Manis Harimu", "sayang");
+
+		likeDao.addAround(air, bandung);
+		likeDao.addAround(cinta, bandung);
+		likeDao.addAround(cinta, kediri);
+		likeDao.addAround(sayang, kediri);
 	}
 
 }

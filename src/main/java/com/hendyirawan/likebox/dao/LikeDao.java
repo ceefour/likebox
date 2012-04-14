@@ -200,4 +200,22 @@ public class LikeDao {
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
+
+	public void addAround(PersonV person, PlaceV place) {
+		if ( person.getAroundPlaces().contains(place) ) {
+			log.debug("Person {} already around Place {}", person.getId(), place.getId());
+		} else {
+			log.debug("Person {} now around Place {}", person.getId(), place.getId());
+			person.addAroundPlace(place);
+		}
+	}
+
+	public void addAround(ArticleV article, PlaceV place) {
+		if ( article.getAroundPlaces().contains(place) ) {
+			log.debug("Article {} already around Place {}", article.getId(), place.getId());
+		} else {
+			log.debug("Article {} now around Place {}", article.getId(), place.getId());
+			article.addAroundPlace(place);
+		}
+	}
 }
