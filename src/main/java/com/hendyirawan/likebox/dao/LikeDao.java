@@ -8,7 +8,7 @@ import org.neo4j.rest.graphdb.RestGraphDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.hendyirawan.likebox.app.ArticleV;
 import com.hendyirawan.likebox.app.PersonV;
 import com.hendyirawan.likebox.app.PlaceV;
@@ -153,7 +153,7 @@ public class LikeDao {
 		// START liker=node:likeboxPerson(_rowId='hendy'), liked=node:likeboxArticle(_rowId='air_itu_sehat') MATCH liker -[rel:LIKE]-> liked RETURN rel
 		ExecutionEngine exec = new ExecutionEngine(graphDb);
 		ExecutionResult result = exec.execute("START liker=node:likeboxPerson(_rowId='hendy'), liked=node:likeboxArticle(_rowId='air_itu_sehat') MATCH liker -[rel:LIKE]-> liked RETURN rel",
-				ImmutableBiMap.of("personId", (Object)person.getId(), "articleId", article.getId()));
+				ImmutableMap.of("personId", (Object)person.getId(), "articleId", article.getId()));
 		for (Object obj : IteratorUtil.asIterable(result.columnAs("rel"))) {
 			Relationship rel = (Relationship) obj;
 			log.info("Remove edge #{} Person {} like Article {}", new Object[] {
